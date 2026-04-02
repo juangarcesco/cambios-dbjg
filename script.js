@@ -1,6 +1,6 @@
-// Constantes de diseño
-const CARD_W = 640;
-const CARD_H = 1000; // Aumentado para evitar solapamientos
+// Constantes de diseño - VERTICAL (Portrait)
+const CARD_W = 640;  
+const CARD_H = 1020; // Aumentado para evitar que la leyenda se monte
 
 const COP_COL = '#4A8FE8';
 const VES_COL = '#E05530';
@@ -16,10 +16,12 @@ const WHITE = '#FFFFFF';
 
 let lastCanvas = null;
 
+// Formateador de números
 function fmtNum(n) {
-    return Number(n).toLocaleString('es-CO', { maximumFractionDigits: 2 });
+    return Number(n).toLocaleString('es-CO', { maximumFractionDigits: 4 });
 }
 
+// Función para dibujar rectángulos redondeados
 function rrect(ctx, x, y, w, h, r, fill, stroke) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -32,6 +34,7 @@ function rrect(ctx, x, y, w, h, r, fill, stroke) {
     if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
 }
 
+// Función principal de generación
 function generate() {
     const titulo = document.getElementById('titulo').value.trim() || 'Cambios DB&JG';
     const subtitulo = document.getElementById('subtitulo').value.trim();
@@ -51,9 +54,11 @@ function generate() {
     const MARGIN = 30;
     const CONTENT_W = CARD_W - (MARGIN * 2);
 
+    // Fondo
     ctx.fillStyle = BG;
     ctx.fillRect(0, 0, CARD_W, CARD_H);
 
+    // Barra de acento superior
     const gBar = ctx.createLinearGradient(0,0,CARD_W,0);
     gBar.addColorStop(0, COP_COL);
     gBar.addColorStop(0.5, GOLD);
@@ -61,6 +66,7 @@ function generate() {
     ctx.fillStyle = gBar;
     ctx.fillRect(0, 0, CARD_W, 6);
 
+    // --- 1. CABECERA ---
     const headerH = 100;
     const headerY = 30;
     rrect(ctx, MARGIN, headerY, CONTENT_W, headerH, 12, MID, BORDER);
@@ -76,6 +82,7 @@ function generate() {
         ctx.fillText(subtitulo, CARD_W/2, headerY + 75);
     }
 
+    // --- 2. BADGES DE TASAS ---
     const badgeH = 75;
     const badgeGap = 15;
     
@@ -98,11 +105,13 @@ function generate() {
     ctx.font = 'bold 34px Oswald, sans-serif';
     ctx.fillText('× ' + fmtNum(tasaBsToCop), MARGIN + 20, badge2Y + 60);
 
+    // --- 3. TABLAS ---
     const tableHeaderH = 38;
-    const tableRowH = 38; // Un poco más de altura por fila
+    const tableRowH = 36;
     const copVals = [10000, 20000, 50000, 100000, 200000, 500000, 1000000];
     const bsVals = [5000, 6000, 7000, 8000, 9000, 10000, 20000];
-    const singleTableH = tableHeaderH + (copVals.length * tableRowH) + 15;
+    const singleTableH = tableHeaderH + (copVals.length * tableRowH) + 10;
+    const tablesGap = 25;
 
     function drawVerticalTable(y, title, titleColor, col1Label, col2Label, rows) {
         rrect(ctx, MARGIN, y, CONTENT_W, singleTableH, 12, MID, BORDER);
@@ -116,11 +125,13 @@ function generate() {
         const colW = CONTENT_W / 2;
         ctx.fillText(col1Label, MARGIN + colW*0.5, y + tableHeaderH + 22);
         ctx.fillText(col2Label, MARGIN + colW*1.5, y + tableHeaderH + 22);
+
         ctx.strokeStyle = BORDER;
         ctx.beginPath();
         ctx.moveTo(MARGIN + 15, y + tableHeaderH + 32);
         ctx.lineTo(MARGIN + CONTENT_W - 15, y + tableHeaderH + 32);
         ctx.stroke();
+
         ctx.beginPath();
         ctx.moveTo(CARD_W/2, y + tableHeaderH + 10);
         ctx.lineTo(CARD_W/2, y + singleTableH - 10);
@@ -130,22 +141,22 @@ function generate() {
             const ry = y + tableHeaderH + 35 + i * tableRowH;
             if (i % 2 === 1) {
                 ctx.fillStyle = 'rgba(255,255,255,0.03)';
-                ctx.fillRect(MARGIN + 2, ry - 22, CONTENT_W - 4, tableRowH);
+                ctx.fillRect(MARGIN + 2, ry - 20, CONTENT_W - 4, tableRowH);
             }
             ctx.fillStyle = TEXT;
             ctx.font = '600 16px Barlow, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText(row[0], MARGIN + colW*0.5, ry + 8);
+            ctx.fillText(row[0], MARGIN + colW*0.5, ry + 5);
             ctx.fillStyle = titleColor === COP_COL ? '#7BBFFF' : '#FF9070';
-            ctx.fillText(row[1], MARGIN + colW*1.5, ry + 8);
+            ctx.fillText(row[1], MARGIN + colW*1.5, ry + 5);
         });
     }
 
-    // Eliminados símbolos de multiplicación y división en los datos
     const copRows = copVals.map(v => [
         '$ ' + v.toLocaleString('es-CO'),
         fmtNum(Math.round((v / tasaCopToBs) * 100) / 100) + ' Bs'
     ]);
+
     const bsRows = bsVals.map(v => [
         v.toLocaleString('es-CO') + ' Bs',
         '$ ' + fmtNum(Math.round(v * tasaBsToCop))
@@ -154,14 +165,16 @@ function generate() {
     const table1Y = badge2Y + badgeH + 30;
     drawVerticalTable(table1Y, '🇨🇴 Pesos → Bolívares', VES_COL, 'PESOS (COP)', 'BOLÍVARES (BS)', copRows);
 
-    const table2Y = table1Y + singleTableH + 30; // Aumentado el espacio entre tablas
+    const table2Y = table1Y + singleTableH + tablesGap;
     drawVerticalTable(table2Y, '🇻🇪 Bolívares → Pesos', COP_COL, 'BOLÍVARES (BS)', 'PESOS (COP)', bsRows);
 
-    // Ajustada la posición del pie de página para que no se monte
+    // --- 4. PIE DE PÁGINA (CORREGIDO) ---
     ctx.fillStyle = MUTED;
     ctx.font = '400 14px Barlow, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Tasas de referencia — Los valores pueden variar', CARD_W/2, CARD_H - 30);
+    // Se dibuja en la nueva altura ajustada
+    ctx.fillText('Tasas de referencia — Los valores pueden variar', CARD_W/2, CARD_H - 35);
+    
     ctx.fillStyle = gBar;
     ctx.fillRect(0, CARD_H-6, CARD_W, 6);
 
@@ -173,10 +186,12 @@ function showPreview(canvas) {
     const previewCanvas = document.getElementById('preview-canvas');
     const wrap = document.getElementById('preview-wrap');
     const dlBtn = document.getElementById('btn-dl');
+
     previewCanvas.width = canvas.width;
     previewCanvas.height = canvas.height;
     const pCtx = previewCanvas.getContext('2d');
     pCtx.drawImage(canvas, 0, 0);
+
     wrap.style.display = 'flex';
     dlBtn.style.display = 'block';
 }
@@ -184,7 +199,7 @@ function showPreview(canvas) {
 function downloadJPG() {
     if (!lastCanvas) return;
     const link = document.createElement('a');
-    link.download = 'tasa-de-cambio-actualizada.jpg';
+    link.download = 'tasa-de-cambio.jpg';
     link.href = lastCanvas.toDataURL('image/jpeg', 0.95);
     link.click();
 }
