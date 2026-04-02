@@ -1,436 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de Tasa de Cambio</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --gold: #D4A017;
-    --gold-light: #F0C040;
-    --dark: #1A1A1A;
-    --darker: #111111;
-    --mid: #2A2A2A;
-    --border: #3A3A3A;
-    --text: #F5F0E8;
-    --muted: #9A9080;
-    --cop: #3A7BD5;
-    --ves: #CF4520;
-    --white: #FFFFFF;
-  }
-
-  body {
-    background: #0F0F0F;
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    gap: 2rem;
-  }
-
-  h1 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 400;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  .panel {
-    background: var(--dark);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 520px;
-  }
-
-  .panel h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 1.2rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.6rem;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-  }
-
-  .field label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .field input {
-    background: var(--mid);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.95rem;
-    padding: 0.6rem 0.9rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .field input:focus { border-color: var(--gold); }
-
-  .row2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .rate-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-  }
-
-  .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-cop { background: var(--cop); }
-  .dot-ves { background: var(--ves); }
-
-  .btn-generate {
-    width: 100%;
-    max-width: 520px;
-    background: var(--gold);
-    color: #111;
-    border: none;
-    border-radius: 8px;
-    padding: 0.85rem;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-  }
-
-  .btn-generate:hover { background: var(--gold-light); }
-  .btn-generate:active { transform: scale(0.98); }
-
-  .btn-download {
-    width: 100%;
-    max-width: 520px;
-    background: transparent;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    padding: 0.75rem;
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: none;
-  }
-
-  .btn-download:hover { background: rgba(212,160,23,0.1); }
-
-  #preview-wrap {
-    width: 100%;
-    max-width: 520px;
-    display: none;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  #preview-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-  #preview-canvas {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-
-  #card {
-    position: fixed;
-    left: -9999px;
-    top: 0;
-    width: 900px;
-    background: #111111;
-    font-family: 'Barlow', sans-serif;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Tasa de Cambio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>&#9670; Generador de Tasa de Cambio &#9670;</h1>
+    <h1>&#9670; Generador de Tasa de Cambio &#9670;</h1>
 
-<div class="panel">
-  <h2>Configuración</h2>
+    <div class="panel">
+        <h2>Configuración</h2>
 
-  <div class="field">
-    <label>Título de la imagen</label>
-    <input type="text" id="titulo" value="Cambios DB&JG" placeholder="Ej: Cambios DB&JG" />
-  </div>
+        <div class="field">
+            <label>Título de la imagen</label>
+            <input type="text" id="titulo" value="Cambios DB&JG" placeholder="Ej: Cambios DB&JG" />
+        </div>
 
-  <div class="field">
-    <label>Subtítulo / Fecha (opcional)</label>
-    <input type="text" id="subtitulo" placeholder="Ej: 02 de Abril 2026 — @micambio" />
-  </div>
+        <div class="field">
+            <label>Subtítulo / Fecha (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Ej: 02 de Abril 2026 — @micambio" />
+        </div>
 
-  <div class="row2">
-    <div class="field">
-      <div class="rate-label"><span class="dot dot-ves"></span>Tasa Pesos → Bs (÷)</div>
-      <input type="number" id="tasaCopToBs" placeholder="Ej: 6.09" step="0.01" value="" />
-      <span style="font-size:0.7rem;color:#787060;margin-top:3px;">Ej: 10.000 ÷ 6.09 = 1.642 Bs</span>
+        <div class="row2">
+            <div class="field">
+                <div class="rate-label"><span class="dot dot-ves"></span>Tasa Pesos → Bs (÷)</div>
+                <input type="number" id="tasaCopToBs" placeholder="Ej: 6.09" step="0.01" />
+                <span class="helper-text">Ej: 10.000 ÷ 6.09 = 1.642 Bs</span>
+            </div>
+            <div class="field">
+                <div class="rate-label"><span class="dot dot-cop"></span>Tasa Bs → Pesos (×)</div>
+                <input type="number" id="tasaBsToCop" placeholder="Ej: 4.25" step="0.01" />
+                <span class="helper-text">Ej: 5.000 × 4.25 = 21.250 COP</span>
+            </div>
+        </div>
     </div>
-    <div class="field">
-      <div class="rate-label"><span class="dot dot-cop"></span>Tasa Bs → Pesos (×)</div>
-      <input type="number" id="tasaBsToCop" placeholder="Ej: 4.25" step="0.01" value="" />
-      <span style="font-size:0.7rem;color:#787060;margin-top:3px;">Ej: 5.000 × 4.25 = 21.250 COP</span>
+
+    <button class="btn-generate" onclick="generate()">Generar imagen</button>
+
+    <div id="preview-wrap">
+        <span id="preview-label">Vista previa</span>
+        <canvas id="preview-canvas"></canvas>
     </div>
-  </div>
-</div>
 
-<button class="btn-generate" onclick="generate()">Generar imagen</button>
+    <button class="btn-download" id="btn-dl" onclick="downloadJPG()">⬇ Descargar JPG</button>
 
-<div id="preview-wrap">
-  <span id="preview-label">Vista previa</span>
-  <canvas id="preview-canvas"></canvas>
-</div>
-
-<button class="btn-download" id="btn-dl" onclick="downloadJPG()">⬇ Descargar JPG</button>
-
-<div id="card"></div>
-
-<script>
-const CARD_W = 900;
-const COP_COL = '#4A8FE8';
-const VES_COL = '#E05530';
-const GOLD = '#D4A017';
-const GOLD_LIGHT = '#F0C040';
-const BG = '#111111';
-const MID = '#1E1E1E';
-const MID2 = '#252525';
-const BORDER = '#333333';
-const TEXT = '#F5F0E8';
-const MUTED = '#787060';
-const WHITE = '#FFFFFF';
-
-let lastCanvas = null;
-
-function fmtNum(n) {
-  return Number(n).toLocaleString('es-CO', { maximumFractionDigits: 4 });
-}
-
-function generate() {
-  const titulo = document.getElementById('titulo').value.trim() || 'Cambios DB&JG';
-  const subtitulo = document.getElementById('subtitulo').value.trim();
-  const tasaCopToBs = parseFloat(document.getElementById('tasaCopToBs').value);
-  const tasaBsToCop = parseFloat(document.getElementById('tasaBsToCop').value);
-
-  if (isNaN(tasaCopToBs) || isNaN(tasaBsToCop) || tasaCopToBs <= 0 || tasaBsToCop <= 0) {
-    alert('Por favor ingresa las dos tasas de cambio válidas.');
-    return;
-  }
-
-  const canvas = document.createElement('canvas');
-  const CARD_H = 660;
-  canvas.width = CARD_W;
-  canvas.height = CARD_H;
-  const ctx = canvas.getContext('2d');
-
-  function rrect(x, y, w, h, r, fill, stroke) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y); ctx.arcTo(x+w,y, x+w,y+r, r);
-    ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h, x+w-r,y+h, r);
-    ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h, x,y+h-r, r);
-    ctx.lineTo(x, y+r); ctx.arcTo(x,y, x+r,y, r);
-    ctx.closePath();
-    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
-  }
-
-  // Background
-  ctx.fillStyle = BG;
-  ctx.fillRect(0, 0, CARD_W, CARD_H);
-
-  // Top accent bar
-  const gBar = ctx.createLinearGradient(0,0,CARD_W,0);
-  gBar.addColorStop(0, COP_COL);
-  gBar.addColorStop(0.5, GOLD);
-  gBar.addColorStop(1, VES_COL);
-  ctx.fillStyle = gBar;
-  ctx.fillRect(0, 0, CARD_W, 4);
-
-  // Header area
-  rrect(40, 24, CARD_W-80, 100, 10, MID, BORDER);
-
-  // Title
-  ctx.fillStyle = GOLD_LIGHT;
-  ctx.font = 'bold 36px Oswald, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(titulo.toUpperCase(), CARD_W/2, 70);
-
-  if (subtitulo) {
-    ctx.fillStyle = MUTED;
-    ctx.font = '500 16px Barlow, sans-serif';
-    ctx.fillText(subtitulo, CARD_W/2, 100);
-  }
-
-  // Rate badges
-  const badgeY = 152;
-  const bW = 380, bH = 72;
-  const bGap = 20;
-  const bX1 = (CARD_W - bW*2 - bGap) / 2;
-  const bX2 = bX1 + bW + bGap;
-
-  rrect(bX1, badgeY, bW, bH, 10, MID2, VES_COL);
-  ctx.fillStyle = VES_COL;
-  ctx.font = '500 12px Barlow, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('TASA PESOS → BOLÍVARES', bX1+16, badgeY+22);
-  ctx.fillStyle = WHITE;
-  ctx.font = 'bold 30px Oswald, sans-serif';
-  ctx.fillText('÷ ' + fmtNum(tasaCopToBs), bX1+16, badgeY+56);
-
-  rrect(bX2, badgeY, bW, bH, 10, MID2, COP_COL);
-  ctx.fillStyle = COP_COL;
-  ctx.font = '500 12px Barlow, sans-serif';
-  ctx.fillText('TASA BOLÍVARES → PESOS', bX2+16, badgeY+22);
-  ctx.fillStyle = WHITE;
-  ctx.font = 'bold 30px Oswald, sans-serif';
-  ctx.fillText('× ' + fmtNum(tasaBsToCop), bX2+16, badgeY+56);
-
-  // Tables
-  const tY = 256;
-  const tW = (CARD_W - 80 - 20) / 2;
-  const tX1 = 40;
-  const tX2 = 40 + tW + 20;
-
-  function drawTable(x, tableWidth, title, titleColor, col1Label, col2Label, rows) {
-    const headerH = 36;
-    const rowH = 34;
-    const totalH = headerH + rows.length * rowH + 8;
-
-    rrect(x, tY, tableWidth, totalH, 10, MID, BORDER);
-
-    rrect(x, tY, tableWidth, headerH, 10, titleColor, null);
-    ctx.fillStyle = WHITE;
-    ctx.font = 'bold 14px Oswald, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(title.toUpperCase(), x + tableWidth/2, tY + 24);
-
-    ctx.fillStyle = MUTED;
-    ctx.font = '500 11px Barlow, sans-serif';
-    const colW = tableWidth / 2;
-    ctx.textAlign = 'center';
-    ctx.fillText(col1Label, x + colW*0.5, tY + headerH + 20);
-    ctx.fillText(col2Label, x + colW*1.5, tY + headerH + 20);
-
-    ctx.strokeStyle = BORDER;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x+12, tY+headerH+28);
-    ctx.lineTo(x+tableWidth-12, tY+headerH+28);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(x+tableWidth/2, tY+headerH);
-    ctx.lineTo(x+tableWidth/2, tY+totalH-4);
-    ctx.stroke();
-
-    rows.forEach((row, i) => {
-      const ry = tY + headerH + 30 + i * rowH;
-      if (i % 2 === 1) {
-        ctx.fillStyle = 'rgba(255,255,255,0.03)';
-        ctx.fillRect(x+1, ry-18, tableWidth-2, rowH);
-      }
-      ctx.fillStyle = TEXT;
-      ctx.font = '600 14px Barlow, sans-serif'; // Ajustado para que quepan números largos
-      ctx.textAlign = 'center';
-      ctx.fillText(row[0], x + colW*0.5, ry+2);
-      ctx.fillStyle = titleColor === COP_COL ? '#7BBFFF' : '#FF9070';
-      ctx.fillText(row[1], x + colW*1.5, ry+2);
-    });
-  }
-
-  // COP to VES
-  const copVals = [10000, 20000, 50000, 100000, 200000, 500000, 1000000];
-  const copRows = copVals.map(v => [
-    '$' + v.toLocaleString('es-CO'),
-    fmtNum(Math.round((v / tasaCopToBs) * 100) / 100) + ' Bs'
-  ]);
-
-  // VES to COP: Intervalos actualizados (5000, 6000, 7000, 8000, 9000, 10000, 20000)
-  const bsVals = [5000, 6000, 7000, 8000, 9000, 10000, 20000];
-  const bsRows = bsVals.map(v => [
-    v.toLocaleString('es-CO') + ' Bs',
-    '$' + fmtNum(Math.round(v * tasaBsToCop))
-  ]);
-
-  drawTable(tX1, tW, '🇨🇴 Pesos → Bolívares', VES_COL, 'PESOS (COP)', 'BOLÍVARES (BS)', copRows);
-  drawTable(tX2, tW, '🇻🇪 Bolívares → Pesos', COP_COL, 'BOLÍVARES (BS)', 'PESOS (COP)', bsRows);
-
-  // Bottom info
-  ctx.fillStyle = MUTED;
-  ctx.font = '400 12px Barlow, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Tasas de referencia — Los valores pueden variar', CARD_W/2, CARD_H - 16);
-
-  ctx.fillStyle = gBar;
-  ctx.fillRect(0, CARD_H-3, CARD_W, 3);
-
-  lastCanvas = canvas;
-  showPreview(canvas);
-}
-
-function showPreview(canvas) {
-  const previewCanvas = document.getElementById('preview-canvas');
-  const wrap = document.getElementById('preview-wrap');
-  const dlBtn = document.getElementById('btn-dl');
-
-  previewCanvas.width = canvas.width;
-  previewCanvas.height = canvas.height;
-  const pCtx = previewCanvas.getContext('2d');
-  pCtx.drawImage(canvas, 0, 0);
-
-  wrap.style.display = 'flex';
-  dlBtn.style.display = 'block';
-}
-
-function downloadJPG() {
-  if (!lastCanvas) return;
-  const link = document.createElement('a');
-  link.download = 'tasa-de-cambio.jpg';
-  link.href = lastCanvas.toDataURL('image/jpeg', 0.95);
-  link.click();
-}
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
