@@ -1,4 +1,8 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
 
 :root {
     --gold: #D4A017;
@@ -22,15 +26,15 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 0.8rem;
     gap: 1.5rem;
 }
 
 h1 {
     font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 400;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
     color: var(--gold);
     text-transform: uppercase;
     text-align: center;
@@ -47,7 +51,9 @@ h1 {
 
 .panel h2 {
     font-family: 'Oswald', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
     color: var(--muted);
     text-transform: uppercase;
     margin-bottom: 1rem;
@@ -59,25 +65,61 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
+    width: 100%;
 }
 
-.field label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+.field label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
 
 .field input {
     background: var(--mid);
     border: 1px solid var(--border);
     border-radius: 6px;
     color: var(--text);
-    padding: 0.6rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+    width: 100%;
     outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+}
+
+.field input:focus { border-color: var(--gold); }
+
+.helper-text {
+    font-size: 0.65rem;
+    color: #787060;
+    margin-top: 2px;
+    line-height: 1.2;
 }
 
 .row2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Intenta 2 columnas, si no hay espacio (menos de 150px c/u) se apila */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 0.8rem;
+    width: 100%;
 }
+
+.rate-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-cop { background: var(--cop); }
+.dot-ves { background: var(--ves); }
 
 .btn-generate {
     width: 100%;
@@ -86,27 +128,13 @@ h1 {
     color: #111;
     border: none;
     border-radius: 8px;
-    padding: 0.85rem;
+    padding: 0.9rem;
     font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
     font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     cursor: pointer;
-}
-
-#preview-wrap {
-    width: 100%;
-    max-width: 520px;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-#preview-canvas {
-    width: 100%;
-    height: auto; /* IMPORTANTE: Mantiene la proporción en móviles */
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    display: block;
 }
 
 .btn-download {
@@ -116,8 +144,33 @@ h1 {
     color: var(--gold);
     border: 1px solid var(--gold);
     border-radius: 8px;
-    padding: 0.75rem;
+    padding: 0.8rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
     text-transform: uppercase;
     cursor: pointer;
     display: none;
+}
+
+#preview-wrap {
+    width: 100%;
+    max-width: 520px;
+    display: none;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1rem;
+}
+
+#preview-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#preview-canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
 }
