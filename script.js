@@ -1,6 +1,5 @@
-// Constantes de diseño
 const CARD_W = 640; 
-// CARD_H ahora se calculará dinámicamente
+// La altura (CARD_H) ahora se calcula automáticamente según el contenido
 
 const COP_COL = '#4A8FE8';
 const VES_COL = '#E05530';
@@ -43,30 +42,29 @@ function generate() {
         return;
     }
 
-    // --- CÁLCULO DE ALTURA DINÁMICA ---
     const MARGIN = 30;
     const CONTENT_W = CARD_W - (MARGIN * 2);
     const tableHeaderH = 38;
     const tableRowH = 36;
+    
+    // Datos de ejemplo para calcular altura
     const copVals = [10000, 20000, 50000, 100000, 200000, 500000, 1000000];
     const bsVals = [5000, 6000, 7000, 8000, 9000, 10000, 20000];
     
     const singleTableH_1 = tableHeaderH + (copVals.length * tableRowH) + 20;
     const singleTableH_2 = tableHeaderH + (bsVals.length * tableRowH) + 20;
     
-    // Sumamos todos los bloques + márgenes para hallar la altura ideal
-    const dynamicH = 30 + 100 + 25 + 65 + 12 + 65 + 30 + singleTableH_1 + 25 + singleTableH_2 + 80;
+    // ALTURA DINÁMICA: Suma de todos los elementos + márgenes
+    const dynamicH = 30 + 100 + 25 + 60 + 10 + 60 + 30 + singleTableH_1 + 25 + singleTableH_2 + 80;
 
     const canvas = document.createElement('canvas');
     canvas.width = CARD_W;
-    canvas.height = dynamicH; // Asignamos la altura calculada
+    canvas.height = dynamicH;
     const ctx = canvas.getContext('2d');
 
-    // Fondo
     ctx.fillStyle = BG;
     ctx.fillRect(0, 0, CARD_W, dynamicH);
 
-    // Barra superior
     const gBar = ctx.createLinearGradient(0,0,CARD_W,0);
     gBar.addColorStop(0, COP_COL);
     gBar.addColorStop(0.5, GOLD);
@@ -74,7 +72,7 @@ function generate() {
     ctx.fillStyle = gBar;
     ctx.fillRect(0, 0, CARD_W, 6);
 
-    // 1. Cabecera
+    // 1. CABECERA
     const headerH = 100;
     const headerY = 30;
     rrect(ctx, MARGIN, headerY, CONTENT_W, headerH, 12, MID, BORDER);
@@ -82,42 +80,41 @@ function generate() {
     ctx.font = 'bold 32px Oswald, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(titulo.toUpperCase(), CARD_W/2, headerY + 45);
-
     if (subtitulo) {
         ctx.fillStyle = MUTED;
         ctx.font = '500 15px Barlow, sans-serif';
         ctx.fillText(subtitulo, CARD_W/2, headerY + 75);
     }
 
-    // 2. Badges
-    const badgeH = 65;
+    // 2. BADGES (Ajustados para móvil - sin símbolos)
+    const badgeH = 60;
     const badge1Y = headerY + headerH + 25;
     rrect(ctx, MARGIN, badge1Y, CONTENT_W, badgeH, 10, MID2, VES_COL);
     ctx.fillStyle = VES_COL;
-    ctx.font = '600 11px Barlow, sans-serif';
+    ctx.font = '600 10px Barlow, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('TASA PESOS → BOLÍVARES', MARGIN + 20, badge1Y + 22);
+    ctx.fillText('TASA PESOS → BOLÍVARES', MARGIN + 15, badge1Y + 20);
     ctx.fillStyle = WHITE;
-    ctx.font = 'bold 28px Oswald, sans-serif';
-    ctx.fillText(fmtNum(tasaCopToBs), MARGIN + 20, badge1Y + 52);
+    ctx.font = 'bold 24px Oswald, sans-serif';
+    ctx.fillText(fmtNum(tasaCopToBs), MARGIN + 15, badge1Y + 48);
 
-    const badge2Y = badge1Y + badgeH + 12;
+    const badge2Y = badge1Y + badgeH + 10;
     rrect(ctx, MARGIN, badge2Y, CONTENT_W, badgeH, 10, MID2, COP_COL);
     ctx.fillStyle = COP_COL;
-    ctx.font = '600 11px Barlow, sans-serif';
-    ctx.fillText('TASA BOLÍVARES → PESOS', MARGIN + 20, badge2Y + 22);
+    ctx.font = '600 10px Barlow, sans-serif';
+    ctx.fillText('TASA BOLÍVARES → PESOS', MARGIN + 15, badge2Y + 20);
     ctx.fillStyle = WHITE;
-    ctx.font = 'bold 28px Oswald, sans-serif';
-    ctx.fillText(fmtNum(tasaBsToCop), MARGIN + 20, badge2Y + 52);
+    ctx.font = 'bold 24px Oswald, sans-serif';
+    ctx.fillText(fmtNum(tasaBsToCop), MARGIN + 15, badge2Y + 48);
 
-    // 3. Tablas
+    // 3. TABLAS
     function drawVerticalTable(y, title, titleColor, col1Label, col2Label, rows, tableH) {
         rrect(ctx, MARGIN, y, CONTENT_W, tableH, 12, MID, BORDER);
         rrect(ctx, MARGIN, y, CONTENT_W, tableHeaderH, 12, titleColor, null);
         ctx.fillStyle = WHITE;
         ctx.font = 'bold 16px Oswald, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(title.toUpperCase(), CARD_W/2, y + 25);
+        ctx.fillText(title, CARD_W/2, y + 25); // Usa el emoji directo aquí si lo deseas
 
         ctx.fillStyle = MUTED;
         ctx.font = '600 12px Barlow, sans-serif';
@@ -152,16 +149,14 @@ function generate() {
 
     const table1Y = badge2Y + badgeH + 30;
     const endT1 = drawVerticalTable(table1Y, '🇨🇴 Pesos → Bolívares', VES_COL, 'PESOS (COP)', 'BOLÍVARES (BS)', copRows, singleTableH_1);
-
     const table2Y = endT1 + 25;
     const endT2 = drawVerticalTable(table2Y, '🇻🇪 Bolívares → Pesos', COP_COL, 'BOLÍVARES (BS)', 'PESOS (COP)', bsRows, singleTableH_2);
 
-    // 4. Pie de página
+    // 4. PIE DE PÁGINA (Posición dinámica)
     ctx.fillStyle = MUTED;
     ctx.font = '400 14px Barlow, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('Tasas de referencia — Los valores pueden variar', CARD_W/2, endT2 + 35);
-    
     ctx.fillStyle = gBar;
     ctx.fillRect(0, dynamicH - 6, CARD_W, 6);
 
@@ -182,7 +177,7 @@ function showPreview(canvas) {
 function downloadJPG() {
     if (!lastCanvas) return;
     const link = document.createElement('a');
-    link.download = 'tasa-de-cambio.jpg';
+    link.download = 'tasa-cambio.jpg';
     link.href = lastCanvas.toDataURL('image/jpeg', 0.95);
     link.click();
 }
